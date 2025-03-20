@@ -1,5 +1,5 @@
 fitz==0.0.1.dev2
-imbalanced_learn==0.13.0
+imbalanced-learn==0.13.0 
 imblearn==0.0
 joblib==1.4.2
 matplotlib==3.10.1
@@ -11,3 +11,5 @@ Pillow==11.1.0
 pytesseract==0.3.13
 scikit_learn==1.6.1
 seaborn==0.13.2
+PyMuPDF==1.22.5 
+
