@@ -14,7 +14,7 @@ class TestUpdate(unittest.TestCase):
         """Set up test environment."""
         cls.test_data_dir = os.path.abspath("../data/test")
         cls.new_data_path = os.path.join(cls.test_data_dir, "new_data.csv")
-        cls.model_path = "../models/cached_multimodal_doc_classifier.pkl"
+        cls.model_path = "../models/cached_multimodal_doc_classifier_v1.pkl"
 
         # Create a sample new dataset
         sample_data = {

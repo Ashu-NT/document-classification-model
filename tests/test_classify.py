@@ -14,7 +14,7 @@ class TestClassify(unittest.TestCase):
     def setUpClass(cls):
         """Set up test environment."""
         cls.test_data_dir = os.path.abspath("../data/test")
-        cls.model_path = "../models/cached_multimodal_doc_classifier.pkl"
+        cls.model_path = "../models/cached_multimodal_doc_classifier_v1.pkl"
         cls.output_csv = os.path.join(cls.test_data_dir, "test_results.csv")
         cls.output_excel = os.path.join(cls.test_data_dir, "test_results.xlsx")
 
