@@ -3,6 +3,9 @@
 import unittest
 import os
 import pandas as pd
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from scripts.dd_OCR_cache_model import main
 from utils.preprocessing import TextProcessor

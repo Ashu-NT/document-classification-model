@@ -4,6 +4,10 @@ import unittest
 import os
 import pandas as pd
 
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from scripts.update_model import ModelUpdater
 from utils.preprocessing import TextProcessor
 from utils.pdf_processor import PDFProcessor
