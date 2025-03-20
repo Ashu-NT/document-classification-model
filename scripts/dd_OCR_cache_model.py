@@ -24,6 +24,8 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as make_imb_pipeline
 import gc
 
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from utils.path_log import TRAINING_DATA_PATH, MODEL_SAVE_PATH,CACHE_DIR
 from utils.pdf_processor import PDFProcessor

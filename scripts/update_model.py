@@ -14,6 +14,10 @@ from sklearn.metrics import accuracy_score, classification_report,confusion_matr
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 # Import necessary functions from training script
 from dd_OCR_cache_model import (
     build_model_pipeline,

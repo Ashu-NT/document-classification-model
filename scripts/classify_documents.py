@@ -4,6 +4,9 @@ import joblib
 import os
 from pathlib import Path
 
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from utils.feature_extractor import PDFFeatureExtractor
 from utils.text_preprocessor import TextPreprocessor
 

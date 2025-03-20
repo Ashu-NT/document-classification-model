@@ -22,7 +22,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.13"  # Use the Python version compatible with your project
+          python-version: "3.9"  # Use the Python version compatible with your project
 
       # Install dependencies
       - name: Install dependencies
@@ -36,6 +36,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y tesseract-ocr
+
+      # Create the data/test directory
+      - name: Create data/test directory
+        run: |
+          mkdir -p data/test
 
       # Run tests
       - name: Run tests
