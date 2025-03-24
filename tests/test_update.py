@@ -6,7 +6,7 @@ import pandas as pd
 
 import sys
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..",'tests')))
 
 from scripts.update_model import ModelUpdater
 from utils.preprocessing import TextProcessor
