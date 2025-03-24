@@ -36,6 +36,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y tesseract-ocr
+      
+      - name: Download NLTK stopwords
+        run: python -c "import nltk; nltk.download('stopwords')"
 
       # Create the data/test directory
       - name: Create data/test directory
