@@ -3,7 +3,7 @@ PyMuPDF==1.22.3
 imbalanced_learn==0.12.4
 imblearn==0.0
 joblib==1.4.2
-matplotlib==3.10.1
+matplotlib==3.9.4
 nltk==3.9.1
 numpy==2.2.4
 opencv_python==4.11.0.86
