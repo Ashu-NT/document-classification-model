@@ -13,50 +13,28 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      NLTK_DATA: ${{ github.workspace }}/nltk_data
+
     steps:
-      # Check out the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"  # Use the Python version compatible with your project
+          python-version: "3.9"
 
-      # Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install -e .  # Install the project in editable mode
+          pip install -e .
 
-      # Install Tesseract OCR (required for PDF processing)
-      - name: Install Tesseract OCR
+      - name: Prepare NLTK data directory
         run: |
-          sudo apt-get update
-          sudo apt-get install -y tesseract-ocr
-      
-      # Set up environment variables
-      - name: Set NLTK data path
-        run: |
-          mkdir -p $HOME/nltk_data
-        shell: bash
+          mkdir -p $NLTK_DATA
+          python -c "import nltk; nltk.download('stopwords', download_dir='$NLTK_DATA')"
 
-      - name: Download NLTK stopwords
-        run: |
-          python -c "import nltk; nltk.download('stopwords', download_dir='$HOME/nltk_data')"
-        env:
-          NLTK_DATA: $HOME/nltk_data
-
-      # Create the data/test directory
-      - name: Create data/test directory
-        run: |
-          mkdir -p data/test
-
-      # Run tests
       - name: Run tests
-        run: |
-          python -m unittest discover tests/
-        env:
-          NLTK_DATA: $HOME/nltk_data
+        run: python -m unittest discover tests/
