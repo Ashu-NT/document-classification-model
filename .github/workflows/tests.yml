@@ -37,8 +37,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y tesseract-ocr
       
+      # Set up environment variables
+      - name: Set NLTK data path
+        run: |
+          mkdir -p $HOME/nltk_data
+        shell: bash
+
       - name: Download NLTK stopwords
-        run: python -c "import nltk; nltk.download('stopwords')"
+        run: |
+          python -c "import nltk; nltk.download('stopwords', download_dir='$HOME/nltk_data')"
+        env:
+          NLTK_DATA: $HOME/nltk_data
 
       # Create the data/test directory
       - name: Create data/test directory
@@ -49,3 +58,5 @@ jobs:
       - name: Run tests
         run: |
           python -m unittest discover tests/
+        env:
+          NLTK_DATA: $HOME/nltk_data
