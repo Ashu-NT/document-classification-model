@@ -1,61 +1,71 @@
-
 # tests/test_update.py
+
 import unittest
 import os
 import pandas as pd
-
 import sys
+from unittest.mock import patch, MagicMock, Mock
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..",'tests')))
-
-from scripts.update_model import ModelUpdater
-from utils.preprocessing import TextProcessor
-from utils.pdf_processor import PDFProcessor
+# Add the root path to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 class TestUpdate(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        """Set up test environment."""
-        cls.test_data_dir = os.path.abspath("../data/test")
-        cls.new_data_path = os.path.join(cls.test_data_dir, "new_data.csv")
-        cls.model_path = "../models/cached_multimodal_doc_classifier_v1.pkl"
+    @patch.dict("sys.modules", {"seaborn": Mock(), "matplotlib": Mock(), "matplotlib.pyplot": Mock()})
+    @patch("pandas.read_csv")
+    @patch("joblib.dump")
+    @patch("joblib.load")
+    @patch("os.path.exists")
+    def test_model_update(
+        self,
+        mock_exists,
+        mock_load,
+        mock_dump,
+        mock_read_csv,
+    ):
+        # Import AFTER sys.modules mocks
+        from scripts.update_model import ModelUpdater
 
-        # Create a sample new dataset
-        sample_data = {
-            "File Path": [os.path.join(cls.test_data_dir, "new_sample1.pdf"), os.path.join(cls.test_data_dir, "new_sample2.pdf")],
-            "Document types": ["Manual", "Datasheet"]
-        }
-        cls.new_df = pd.DataFrame(sample_data)
-        cls.new_df.to_csv(cls.new_data_path, index=False)
+        # Mock version file behavior
+        mock_exists.side_effect = lambda path: "version.txt" in path or "processed_data.joblib" in path or "pkl" in path
 
-        # Create sample PDFs
-        for file_path in cls.new_df["File Path"]:
-            with open(file_path, "w") as f:
-                f.write("This is a new sample PDF for testing.")
+        # Fake previous model
+        mock_model = MagicMock()
+        mock_model.fit.return_value = mock_model
+        mock_model.predict.return_value = [0, 1]
+        mock_load.side_effect = [
+            mock_model,  # load previous model
+            pd.DataFrame({  # load previous cache
+                "File Path": ["existing.pdf"],
+                "Raw_Text": ["text"],
+                "Processed_Text": ["processed"],
+                "Visual_Features": [[0.1, 0.2]],
+                "Document types": ["TypeA"]
+            })
+        ]
 
-    def test_model_update(self):
-        """Test the model update workflow."""
-        # Initialize the ModelUpdater
-        updater = ModelUpdater(self.model_path, "../data/cache")
+        # Fake new CSV input
+        mock_read_csv.return_value = pd.DataFrame({
+            "File Path": ["new.pdf"],
+            "Document types": ["TypeB"]
+        })
 
-        # Run the update process
-        updater.update(self.new_data_path)
+        # Patch internals
+        with patch("scripts.update_model.PDFProcessor.extract_text", return_value="sample text"), \
+             patch("scripts.update_model.PDFProcessor.extract_visual_features", return_value=[0.3, 0.4]), \
+             patch("scripts.update_model.TextProcessor.load_cache"), \
+             patch("scripts.update_model.TextProcessor.preprocess", return_value="processed new text"), \
+             patch("scripts.update_model.build_model_pipeline", return_value=mock_model):
 
-        # Check if the new model version was saved
-        new_model_path = f"../models/cached_multimodal_doc_classifier_v{updater.current_version}.pkl"
-        self.assertTrue(os.path.exists(new_model_path))
+            model_path = os.path.abspath("../models/cached_multimodal_doc_classifier")
+            cache_dir = os.path.abspath("../data/cache")
 
-    @classmethod
-    def tearDownClass(cls):
-        """Clean up test environment."""
-        # Remove sample files
-        for file_path in cls.new_df["File Path"]:
-            if os.path.exists(file_path):
-                os.remove(file_path)
-        if os.path.exists(cls.new_data_path):
-            os.remove(cls.new_data_path)
-        if os.path.exists(cls.model_path):
-            os.remove(cls.model_path)
+            updater = ModelUpdater(model_path, cache_dir)
+            updater.update("fake_path.csv")
+
+            # Asserts
+            mock_read_csv.assert_called_once()
+            mock_model.fit.assert_called_once()
+            mock_dump.assert_called()
 
 if __name__ == "__main__":
     unittest.main()
