@@ -4,14 +4,13 @@
 import unittest
 import os
 import sys
+import numpy as np
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..",'tests')))
 
 from scripts.classify_documents import classify_pdfs
 from utils.preprocessing import TextProcessor
 from utils.pdf_processor import PDFProcessor
-
-
 
 class TestClassify(unittest.TestCase):
     @classmethod
