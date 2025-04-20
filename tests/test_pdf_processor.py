@@ -8,6 +8,7 @@ from unittest.mock import patch, MagicMock
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 try:
+    from utils.pdf_processor import memory  # Add this import
     from utils.pdf_processor import PDFProcessor
 except ImportError:
     # For testing purposes, we'll mock these if they can't be imported
@@ -42,38 +43,40 @@ class TestPDFProcessor:
     @patch('fitz.open')
     @patch('pytesseract.image_to_string')
     def test_extract_text(self, mock_ocr, mock_fitz_open, sample_pdf_path):
-        # Create the mock page
+        # Clear cache before test execution
+        memory.clear()
+        # Create mock page
         mock_page = MagicMock()
         mock_page.rect.width = 595
         mock_page.rect.height = 842
-        mock_page.get_text.return_value = "Short text"
+        mock_page.get_text.return_value = "Short text"  # Ensure text is short to trigger OCR
 
-        # Create the mock pixmap
+        # Mock pixmap for OCR
         mock_pixmap = MagicMock()
         mock_pixmap.width = 100
         mock_pixmap.height = 100
         mock_pixmap.samples = b'\x00' * (100 * 100 * 3)
         mock_page.get_pixmap.return_value = mock_pixmap
 
-        # Setup OCR fallback
+        # Configure OCR mock
         mock_ocr.return_value = " OCR fallback text"
 
-        # Mock document
+        # Mock document with page access
         mock_doc = MagicMock()
-        mock_doc.__iter__.return_value = iter([mock_page])  
+        mock_doc.__iter__.return_value = iter([mock_page])
+        mock_doc.pages = [mock_page]  # Support doc.pages access
         mock_doc.page_count = 1
         mock_doc.__len__.return_value = 1
 
-        # fitz.open context manager
+        # Configure fitz.open context manager
         mock_fitz_open.return_value.__enter__.return_value = mock_doc
 
-        # Call the method
+        # Execute method
         result = PDFProcessor.extract_text(sample_pdf_path, "v1")
 
-        # Check result
-        assert isinstance(result, str)
-        mock_page.get_text.assert_called_once_with("text")  
-        mock_ocr.assert_called_once()  # Verify OCR fallback
+        # Verify text extraction called
+        mock_page.get_text.assert_called_once_with("text")  # Or adjust argument if needed
+        assert "OCR fallback text" in result  # Ensure OCR fallback triggered
     
     @patch('fitz.open')
     @patch('cv2.cvtColor')
