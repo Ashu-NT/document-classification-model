@@ -1,5 +1,4 @@
 name: Run Tests
-
 on:
   push:
     branches:
@@ -11,7 +10,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     env:
       NLTK_DATA: ${{ github.workspace }}/nltk_data
 
@@ -36,12 +34,6 @@ jobs:
           mkdir -p $NLTK_DATA
           python -c "import nltk; nltk.download('stopwords', download_dir='$NLTK_DATA')"
 
-      - name: Clear Action Cache
-        run: rm -rf ~/.cache/gh/actions
-
-      - name: List files in current directory
-        run: ls -la
-
       - name: Run tests
         run: |
           pytest tests/ -v
@@ -51,7 +43,7 @@ jobs:
           pytest tests/ --cov=scripts --cov-report=xml
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Corrected version
         with:
           name: test-results
           path: coverage.xml
