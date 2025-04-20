@@ -25,4 +25,4 @@ setuptools==75.8.2
 
 coverage>=7.3.3
 pytest-cov>=4.1.0
-
+openpyxl>=3.0.0

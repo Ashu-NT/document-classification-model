@@ -4,8 +4,7 @@ import os
 
 # Ensure NLTK uses the correct path
 nltk_data_path = os.environ.get("NLTK_DATA", os.path.join(os.getcwd(), "nltk_data"))
-if nltk_data_path not in nltk.data.path:
-    nltk.data.path.append(nltk_data_path)
+nltk.data.path.append(os.environ.get("NLTK_DATA", ""))
 
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
