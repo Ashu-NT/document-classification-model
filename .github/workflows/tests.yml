@@ -30,6 +30,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -e .
+          pip install pytest pytest-cov
 
       - name: Prepare NLTK data directory
         run: |
@@ -37,4 +38,17 @@ jobs:
           python -c "import nltk; nltk.download('stopwords', download_dir='$NLTK_DATA')"
 
       - name: Run tests
-        run: python -m unittest discover tests/
+        run: |
+          pytest tests/ -v
+
+      - name: Generate coverage report
+        run: |
+          pytest tests/ --cov=scripts --cov-report=xml
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: |
+            coverage.xml
+        if: always()

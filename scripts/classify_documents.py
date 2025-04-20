@@ -3,9 +3,7 @@ import pandas as pd
 import joblib
 import os
 from pathlib import Path
-import threading
 from joblib import Parallel, delayed
-from datetime import datetime
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "scripts")))
 
@@ -67,6 +65,7 @@ def classify_pdfs(root_dir, model_path, output_csv=None, output_excel=None):
     if output_excel: result_df.to_excel(output_excel, index=False)
     
     # Save non-PDF files list
+    os.makedirs(os.path.join("..", "data", "non_pdf_files"), exist_ok=True)
     pd.DataFrame({'non_pdf_files': non_pdf_files}).to_excel(
         "../data/non_pdf_files/3212_hug.xlsx", index=False)
     
