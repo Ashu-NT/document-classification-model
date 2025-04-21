@@ -73,29 +73,28 @@ The project is organized into three main scripts:
 
 ## Usage
 
-000. **Training the Model**
-    01. Prepare your training data in a CSV file with columns:
+1. **Training the Model**
+    1. Prepare your training data in a CSV file with columns:
         + `File Path:` Path to the PDF file.
         + `Document types:` Label for the document (e.g., Manual, Datasheet).
-    02. Run the training script:
+    2. Run the training script:
         This will:
         + Extract features from the PDFs.
         + Train the model.
         + Save the model and cache to the specified paths.
 
-010. **Updating the Model**
-    011. Prepare new data in a CSV file with the same format as the training data.
-    012. Run the update script:
+2. **Updating the Model**
+    1. Prepare new data in a CSV file with the same format as the training data.
+    2. Run the update script:
         This will:
         + Load the existing model and cache.
         + Process and merge new data.
         + Retrain the model with the updated dataset.
         + Save the new model version.
 
-100. **Classifying Documents**
-    110. Organize your PDFs in a directory structure where subfolders represent system codes (e.g., 4710.11243.98673).
-
-    120. Run the classification script:
+3. **Classifying Documents**
+    1. Organize your PDFs in a directory structure where subfolders represent system codes (e.g., 4710.11243.98673).
+    2. Run the classification script:
         This will:
         + Load the trained model.
         + Classify PDFs in the specified directory.
