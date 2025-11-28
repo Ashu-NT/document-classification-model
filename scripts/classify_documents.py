@@ -99,15 +99,15 @@ def classify_pdfs(root_dir, model_path, output_csv=None, output_excel=None,confi
     # Save non-PDF files list
     os.makedirs(os.path.join("..", "data", "non_pdf_files"), exist_ok=True)
     pd.DataFrame({'non_pdf_files': non_pdf_files}).to_excel(
-        "../data/non_pdf_files/3212_hug.xlsx", index=False)
+        "../data/non_pdf_files/nonComponentBW.xlsx", index=False)
     
     return result_df
 
 if __name__ == "__main__":
     model_path = "../models/cached_multimodal_doc_classifier_v1.pkl"
-    input_directory = r"C:\Users\ashu\OneDrive - dintegra\David Garcia Cumplido's files - Teresita (10-02-2025)"
-    output_file = "../data/classify_data/3212_hug.csv"
-    output_excel = "../data/classify_data/3212_hug.xlsx"
+    input_directory = r"C:\Users\ashu\OneDrive - dintegra\David (shared)'s files - FLW - MY Boardwalk (117m)\3360_13797.3660.01_3800_13797.3800.01_eekels"
+    output_file = "../data/classify_data/nonComponentBW.csv"
+    output_excel = "../data/classify_data/nonComponentBW.xlsx"
     
     classification_results = classify_pdfs(
         input_directory,
